@@ -12,7 +12,7 @@ API de gestión de usuarios y órdenes con comunicación basada en eventos usand
 
 1. Clona el repositorio:
 ```bash
-git clone <url-del-repositorio>
+git clone https://github.com/rogermanzo/order-api.git
 cd order-api
 ```
 
