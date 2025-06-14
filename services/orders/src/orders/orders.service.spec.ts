@@ -1,10 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrdersService } from './orders.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { EventsService } from '../events/events.service';
 
 describe('OrdersService', () => {
   let service: OrdersService;
   let prismaService: PrismaService;
+  let eventsService: EventsService;
 
   const mockPrismaService = {
     order: {
@@ -15,6 +17,11 @@ describe('OrdersService', () => {
     },
   };
 
+  const mockEventsService = {
+    publishOrderCreated: jest.fn(),
+    publishOrderStatusUpdated: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -23,11 +30,16 @@ describe('OrdersService', () => {
           provide: PrismaService,
           useValue: mockPrismaService,
         },
+        {
+          provide: EventsService,
+          useValue: mockEventsService,
+        },
       ],
     }).compile();
 
     service = module.get<OrdersService>(OrdersService);
     prismaService = module.get<PrismaService>(PrismaService);
+    eventsService = module.get<EventsService>(EventsService);
   });
 
   it('should be defined', () => {
@@ -57,9 +69,11 @@ describe('OrdersService', () => {
       };
 
       mockPrismaService.order.create.mockResolvedValue(expectedOrder);
+      mockEventsService.publishOrderCreated.mockResolvedValue(undefined);
 
       const result = await service.create(createOrderDto);
       expect(result).toEqual(expectedOrder);
+      expect(mockEventsService.publishOrderCreated).toHaveBeenCalledWith(expectedOrder);
     });
   });
 }); 

@@ -49,27 +49,14 @@ Eventos disponibles:
 - `order.created`: Creación de órdenes
 - `order.status.updated`: Actualización de estado de órdenes
 
-## Migraciones y Tests
-
-### Migraciones
-```bash
-# Servicio de Usuarios
-cd services/users
-npm run prisma:migrate
-
-# Servicio de Órdenes
-cd services/orders
-npm run prisma:migrate
-```
+# Tests
 
 ### Tests
 ```bash
-# Servicio de Usuarios
-cd services/users
-npm run test
+# Instalar dependencias en el directorio raíz
+npm install
 
-# Servicio de Órdenes
-cd services/orders
+# Ejecutar todas las pruebas
 npm run test
 ```
 
@@ -104,4 +91,4 @@ JWT_EXPIRATION=1h
 DATABASE_URL=postgresql://postgres:postgres@postgres:5432/orders_db
 JWT_SECRET=your-secret-key
 JWT_EXPIRATION=1h
-``` 
+```
