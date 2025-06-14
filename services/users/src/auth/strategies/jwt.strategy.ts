@@ -13,23 +13,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    console.log('Estrategia JWT - Payload completo:', payload);
-    
-    // Asegurarnos de que sub existe
+    // Make sure sub exists
     if (!payload.sub) {
-      console.log('Estrategia JWT - Error: sub no existe en el payload');
+      console.log('JWT Strategy - Error: sub does not exist in payload');
       throw new Error('Invalid token payload');
     }
 
     // Convert ID to number to avoid NaN issues
     const userId = Number(payload.sub);
     
-    const user = {
+    return {
       id: userId,
       email: payload.email
     };
-    
-    console.log('Estrategia JWT - Usuario a devolver:', user);
-    return user;
   }
 }

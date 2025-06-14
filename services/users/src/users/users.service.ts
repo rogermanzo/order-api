@@ -39,34 +39,29 @@ export class UsersService {
 
   async findByEmail(email: string, withPassword = false): Promise<any> {
     try {
-      this.logger.debug(`Servicio - Buscando usuario por email: ${email}`);
-      
-    const user = await this.prisma.user.findUnique({
-      where: { email },
-    });
+      const user = await this.prisma.user.findUnique({
+        where: { email },
+      });
 
-    if (!user) {
-        this.logger.error(`Servicio - Usuario no encontrado con email: ${email}`);
-      throw new NotFoundException('User not found');
-    }
+      if (!user) {
+        this.logger.error(`Service - User not found with email: ${email}`);
+        throw new NotFoundException('User not found');
+      }
 
-    if (withPassword) {
-      return user;
-    }
+      if (withPassword) {
+        return user;
+      }
 
-    const { password, ...result } = user;
-      this.logger.debug(`Servicio - Usuario encontrado: ${JSON.stringify(result)}`);
+      const { password, ...result } = user;
       return result;
     } catch (error) {
-      this.logger.error(`Servicio - Error al buscar usuario por email: ${error.message}`);
+      this.logger.error(`Service - Error searching user by email: ${error.message}`);
       throw error;
     }
   }
 
   async getProfileFromToken(token: string) {
     try {
-      this.logger.debug(`Servicio - Token recibido: ${token}`);
-      
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
@@ -74,29 +69,24 @@ export class UsersService {
       }).join(''));
 
       const decoded = JSON.parse(jsonPayload);
-      this.logger.debug(`Servicio - Token decodificado manualmente: ${JSON.stringify(decoded)}`);
       
       if (!decoded || !decoded.sub) {
         throw new NotFoundException('Invalid token');
       }
 
       const userId = decoded.sub;
-      this.logger.debug(`Servicio - ID del usuario: ${userId}`);
-
-    const user = await this.prisma.user.findUnique({
+      const user = await this.prisma.user.findUnique({
         where: { id: userId },
-    });
+      });
 
-      this.logger.debug(`Servicio - Usuario encontrado: ${JSON.stringify(user)}`);
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
 
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    const { password, ...result } = user;
-    return result;
+      const { password, ...result } = user;
+      return result;
     } catch (error) {
-      this.logger.error(`Servicio - Error al procesar el token: ${error.message}`);
+      this.logger.error(`Service - Error processing token: ${error.message}`);
       throw new NotFoundException('Error processing token');
     }
   }

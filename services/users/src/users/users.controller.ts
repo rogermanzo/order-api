@@ -28,10 +28,9 @@ export class UsersController {
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   async getProfile(@Request() req) {
     try {
-      this.logger.debug(`Controlador - Buscando usuario por email: ${req.user.email}`);
       return this.usersService.findByEmail(req.user.email);
     } catch (error) {
-      this.logger.error(`Controlador - Error: ${error.message}`);
+      this.logger.error(`Controller - Error: ${error.message}`);
       throw error;
     }
   }
