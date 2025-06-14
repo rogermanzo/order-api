@@ -21,6 +21,8 @@ cd order-api
 docker-compose up --build
 ```
 
+> **Nota**: En algunas versiones de Docker, este comando puede fallar en el primer intento. Si esto ocurre, simplemente ejecuta el comando nuevamente y debería funcionar correctamente.
+
 Los servicios estarán disponibles en:
 - Users API: http://localhost:3001
   - Swagger: http://localhost:3001/api
